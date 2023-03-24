@@ -58,7 +58,7 @@ export const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = asy
             username: user.username
         }, env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.cookie('token', token, {sameSite: "none"})
+        res.cookie('token', token, {sameSite: "none", secure: true})
         res.json(user).sendStatus(200)
     } catch (error) {
         next(error);
@@ -95,7 +95,7 @@ export const login: RequestHandler<unknown, unknown, LoginBody, unknown> = async
             username: user.username
         }, env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.cookie('token', token, {sameSite: "none"})
+        res.cookie('token', token, {sameSite: "none", secure: true})
         res.json(user).sendStatus(200)
         // res.status(201).json(user);
     } catch (error) {
