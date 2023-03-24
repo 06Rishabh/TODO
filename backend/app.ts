@@ -16,12 +16,13 @@ const corsOptions ={
 }
 
 const app = express();
+app.use(express.json());
 
+app.options("*", cors());
 app.use(cors());
 app.set("trust proxy",1);
 app.use(morgan("dev"));
 
-app.use(express.json());
 
 app.use(session({
     secret: env.SESSION_SECRET,
