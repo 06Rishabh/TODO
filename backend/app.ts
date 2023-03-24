@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
+import  cors from  "cors";
 import notesRoutes from "./routes/notes";
 import userRoutes from "./routes/users";
 import morgan from "morgan";
@@ -8,7 +9,6 @@ import session from "express-session";
 import env from "./util/validateEnv";
 import MongoStore from "connect-mongo";
 import { requiresAuth } from "./middleware/auth";
-import  cors from  "cors";
 const corsOptions ={
    origin:'*', 
    credentials:true,            //access-control-allow-credentials:true
@@ -17,8 +17,8 @@ const corsOptions ={
 
 const app = express();
 
+app.use(cors());
 app.set("trust proxy",1);
-app.use(cors(corsOptions))
 app.use(morgan("dev"));
 
 app.use(express.json());

@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import createHttpError from "http-errors";
-
+import  jwt from 'jsonwebtoken';
 export const requiresAuth: RequestHandler = (req, res, next) => {
     if (req.session.userId) {
         next();
@@ -8,3 +8,5 @@ export const requiresAuth: RequestHandler = (req, res, next) => {
         next(createHttpError(401, "User not authenticated"));
     }
 };
+
+

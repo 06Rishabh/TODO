@@ -1,8 +1,10 @@
 import { RequestHandler } from "express";
 import createHttpError from "http-errors";
+import jwt  from 'jsonwebtoken';
+import jwtdecode from 'jwt-decode';
+import env from "../util/validateEnv";
 import UserModel from "../models/user";
 import bcrypt from "bcrypt";
-
 export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
     try {
         const user = await UserModel.findById(req.session.userId).select("+email").exec();
@@ -81,8 +83,12 @@ export const login: RequestHandler<unknown, unknown, LoginBody, unknown> = async
         if (!passwordMatch) {
             throw createHttpError(401, "Invalid credentials");
         }
+        var token = jwt.sign({
+            id: user._id,
+            username: user.username
+        }, env.JWT_SECRET, { expiresIn: '1h' });
 
-        req.session.userId = user._id;
+        res.cookie('token', token).sendStatus(200);
         res.status(201).json(user);
     } catch (error) {
         next(error);
