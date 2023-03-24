@@ -44,6 +44,15 @@ app.use((req, res, next) => {
     next(createHttpError(404, "Endpoint not found"));
 });
 
+app.get("/", (req,res) => {
+    try{
+        res.send("Server running");
+    }
+    catch(err){
+        res.status(500).json({message: err});
+    }
+});
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
     console.error(error);
