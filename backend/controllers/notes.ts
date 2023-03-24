@@ -5,7 +5,9 @@ import NoteModel from "../models/note";
 import { assertIsDefined } from "../util/assertIsDefined";
 
 export const getNotes: RequestHandler = async (req, res, next) => {
-    const authenticatedUserId = req.session.userId;
+    const authenticatedUserId = req.body.userId;
+    // console.log("running getNotes")
+    // console.log(authenticatedUserId);
 
     try {
         assertIsDefined(authenticatedUserId);
@@ -19,7 +21,7 @@ export const getNotes: RequestHandler = async (req, res, next) => {
 
 export const getNote: RequestHandler = async (req, res, next) => {
     const noteId = req.params.noteId;
-    const authenticatedUserId = req.session.userId;
+    const authenticatedUserId = req.body.userId;
 
     try {
         assertIsDefined(authenticatedUserId);
@@ -47,12 +49,14 @@ export const getNote: RequestHandler = async (req, res, next) => {
 interface CreateNoteBody {
     title?: string,
     text?: string,
+    userId?: string,
 }
 
 export const createNote: RequestHandler<unknown, unknown, CreateNoteBody, unknown> = async (req, res, next) => {
     const title = req.body.title;
     const text = req.body.text;
-    const authenticatedUserId = req.session.userId;
+    // const authenticatedUserId = req.session.userId;
+    const authenticatedUserId = req.body.userId;
 
     try {
         assertIsDefined(authenticatedUserId);
@@ -80,13 +84,14 @@ interface UpdateNoteParams {
 interface UpdateNoteBody {
     title?: string,
     text?: string,
+    userId?: string,
 }
 
 export const updateNote: RequestHandler<UpdateNoteParams, unknown, UpdateNoteBody, unknown> = async (req, res, next) => {
     const noteId = req.params.noteId;
     const newTitle = req.body.title;
     const newText = req.body.text;
-    const authenticatedUserId = req.session.userId;
+    const authenticatedUserId = req.body.userId;
 
     try {
         assertIsDefined(authenticatedUserId);
@@ -122,7 +127,7 @@ export const updateNote: RequestHandler<UpdateNoteParams, unknown, UpdateNoteBod
 
 export const deleteNote: RequestHandler = async (req, res, next) => {
     const noteId = req.params.noteId;
-    const authenticatedUserId = req.session.userId;
+    const authenticatedUserId = req.body.userId;
 
     try {
         assertIsDefined(authenticatedUserId);
@@ -131,7 +136,7 @@ export const deleteNote: RequestHandler = async (req, res, next) => {
             throw createHttpError(400, "Invalid note id");
         }
 
-        const note = await NoteModel.findById(noteId).exec();
+        const note = await NoteModel.findById(noteId);
 
         if (!note) {
             throw createHttpError(404, "Note not found");
@@ -141,7 +146,7 @@ export const deleteNote: RequestHandler = async (req, res, next) => {
             throw createHttpError(401, "You cannot access this note");
         }
 
-        await note.remove();
+        await note.delete();
 
         res.sendStatus(204);
     } catch (error) {

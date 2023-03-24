@@ -5,9 +5,12 @@ import jwtdecode from 'jwt-decode';
 import env from "../util/validateEnv";
 import UserModel from "../models/user";
 import bcrypt from "bcrypt";
+
 export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
+    // console.log("running getAuthUser")
     try {
-        const user = await UserModel.findById(req.session.userId).select("+email").exec();
+        const user = await UserModel.findById(req.body.userId);
+        console.log(user);
         res.status(200).json(user);
     } catch (error) {
         next(error);
@@ -44,15 +47,19 @@ export const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = asy
 
         const passwordHashed = await bcrypt.hash(passwordRaw, 10);
 
-        const newUser = await UserModel.create({
+        const user = await UserModel.create({
             username: username,
             email: email,
             password: passwordHashed,
         });
 
-        req.session.userId = newUser._id;
+        var token = jwt.sign({
+            id: user._id,
+            username: user.username
+        }, env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.status(201).json(newUser);
+        res.cookie('token', token)
+        res.json(user).sendStatus(200)
     } catch (error) {
         next(error);
     }
@@ -88,8 +95,9 @@ export const login: RequestHandler<unknown, unknown, LoginBody, unknown> = async
             username: user.username
         }, env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.cookie('token', token).sendStatus(200);
-        res.status(201).json(user);
+        res.cookie('token', token)
+        res.json(user).sendStatus(200)
+        // res.status(201).json(user);
     } catch (error) {
         next(error);
     }

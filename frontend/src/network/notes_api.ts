@@ -4,6 +4,7 @@ import { User } from "../models/user";
 
 async function fetchData(input: RequestInfo, init?: RequestInit) {
     const response = await fetch(input, init);
+    // console.log(response);
     if (response.ok) {
         return response;
     } else {
@@ -20,7 +21,8 @@ async function fetchData(input: RequestInfo, init?: RequestInit) {
 }
 
 export async function getLoggedInUser(): Promise<User> {
-    const response = await fetchData("https://todo-plum-iota.vercel.app/api/users", { method: "GET" });
+    const response = await fetchData("https://todo-plum-iota.vercel.app/api/users", { method: "GET", credentials: 'include' });
+    // console.log(response);
     return response.json();
 }
 
@@ -34,6 +36,7 @@ export async function signUp(credentials: SignUpCredentials): Promise<User> {
     const response = await fetchData("https://todo-plum-iota.vercel.app/api/users/signup",
         {
             method: "POST",
+            credentials: 'include',
             headers: {
                 "Content-Type": "application/json",
             },
@@ -51,11 +54,13 @@ export async function login(credentials: LoginCredentials): Promise<User> {
     const response = await fetchData("https://todo-plum-iota.vercel.app/api/users/login",
         {
             method: "POST",
+            credentials: 'include',
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(credentials),
         });
+        console.log(response);
     return response.json();
 }
 
@@ -64,7 +69,7 @@ export async function logout() {
 }
 
 export async function fetchNotes(): Promise<Note[]> {
-    const response = await fetchData("https://todo-plum-iota.vercel.app/api/notes", { method: "GET" });
+    const response = await fetchData("https://todo-plum-iota.vercel.app/api/notes", { method: "GET", credentials: 'include' });
     return response.json();
 }
 
@@ -77,6 +82,7 @@ export async function createNote(note: NoteInput): Promise<Note> {
     const response = await fetchData("https://todo-plum-iota.vercel.app/api/notes",
         {
             method: "POST",
+            credentials: 'include',
             headers: {
                 "Content-Type": "application/json",
             },
@@ -89,6 +95,7 @@ export async function updateNote(noteId: string, note: NoteInput): Promise<Note>
     const response = await fetchData("https://todo-plum-iota.vercel.app/api/notes/" + noteId,
         {
             method: "PATCH",
+            credentials: 'include',
             headers: {
                 "Content-Type": "application/json",
             },
@@ -98,5 +105,5 @@ export async function updateNote(noteId: string, note: NoteInput): Promise<Note>
 }
 
 export async function deleteNote(noteId: string) {
-    await fetchData("https://todo-plum-iota.vercel.app/api/notes/" + noteId, { method: "DELETE" });
+    await fetchData("https://todo-plum-iota.vercel.app/api/notes/" + noteId, { method: "DELETE", credentials: 'include' });
 }

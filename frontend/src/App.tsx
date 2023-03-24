@@ -25,6 +25,8 @@ function App() {
 			try {
 				const user = await NotesApi.getLoggedInUser();
 				setLoggedInUser(user);
+
+				console.log(loggedInUser);
 			} catch (error) {
 				console.error(error);
 			}

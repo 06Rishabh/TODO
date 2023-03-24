@@ -131,9 +131,11 @@ const Note = ({ note, onNoteClicked, onDeleteNoteClicked,index,moveNote ,classNa
                     {title}
                     <MdDelete
                         className="text-muted ms-auto"
+                        style={{cursor: "pointer"}}
                         onClick={(e) => {
                             onDeleteNoteClicked(note);
                             e.stopPropagation();
+                            // window.location.reload();
                         }}
                     />
                 </Card.Title>
