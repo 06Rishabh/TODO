@@ -1,7 +1,6 @@
 import { Button, Navbar } from "react-bootstrap";
 import { User } from "../models/user";
 import * as NotesApi from "../network/notes_api";
-import Cookies from 'js-cookie';
 
 interface NavBarLoggedInViewProps {
     user: User,
@@ -13,7 +12,6 @@ const NavBarLoggedInView = ({ user, onLogoutSuccessful }: NavBarLoggedInViewProp
     async function logout() {
         try {
             await NotesApi.logout();
-            Cookies.remove('token');
             onLogoutSuccessful();
         } catch (error) {
             console.error(error);

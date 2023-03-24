@@ -18,8 +18,8 @@ const corsOptions ={
 const app = express();
 app.use(express.json());
 
-app.options(["http://localhost:3000", "https://todo-ac6q.vercel.app"], cors());
-app.use(cors({ origin: ['http://localhost:3000', 'https://todo-ac6q.vercel.app'] , credentials : true}));;
+app.options(["http://localhost:3000", "https://todo-ac6q.vercel.app", "https://todo-ac6q-06rishabh.vercel.app"], cors());
+app.use(cors({ origin: ['http://localhost:3000', 'https://todo-ac6q.vercel.app', 'https://todo-ac6q-06rishabh.vercel.app'] , credentials : true}));;
 app.set("trust proxy",1);
 app.use(morgan("dev"));
 
