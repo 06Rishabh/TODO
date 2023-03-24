@@ -37,13 +37,6 @@ app.use(session({
     }),
 }));
 
-app.use("/api/users", userRoutes);
-app.use("/api/notes", requiresAuth, notesRoutes);
-
-app.use((req, res, next) => {
-    next(createHttpError(404, "Endpoint not found"));
-});
-
 app.get("/", (req,res) => {
     try{
         res.send("Server running");
@@ -52,6 +45,22 @@ app.get("/", (req,res) => {
         res.status(500).json({message: err});
     }
 });
+
+app.use("/api/users", userRoutes);
+app.use("/api/notes", requiresAuth, notesRoutes);
+
+app.use((req, res, next) => {
+    next(createHttpError(404, "Endpoint not found"));
+});
+
+// app.get("/", (req,res) => {
+//     try{
+//         res.send("Server running");
+//     }
+//     catch(err){
+//         res.status(500).json({message: err});
+//     }
+// });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
